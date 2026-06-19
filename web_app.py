@@ -4,6 +4,7 @@ import html
 import re
 from datetime import datetime, timedelta
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn
 from urllib.parse import parse_qs, unquote
 
 # --- State (single-user, module-level) ---
@@ -304,18 +305,26 @@ function prefill(date,start,end){{
 
 # --- HTTP request handler ---
 
+class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
+
+
 class Handler(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
     def _send_html(self, body, code=200):
         data = body.encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(data)))
+        self.send_header("Connection", "close")
         self.end_headers()
         self.wfile.write(data)
 
     def _redirect(self, location="/"):
         self.send_response(303)
         self.send_header("Location", location)
+        self.send_header("Connection", "close")
         self.end_headers()
 
     def _read_form(self):
@@ -424,14 +433,11 @@ class Handler(BaseHTTPRequestHandler):
         else:
             self._send_html(render_page())
 
-    def log_message(self, format, *args):
-        pass
-
 # --- Startup ---
 
 if __name__ == "__main__":
     load_data()
-    server = HTTPServer(("127.0.0.1", 8765), Handler)
+    server = ThreadingHTTPServer(("127.0.0.1", 8765), Handler)
     print("=" * 50)
     print("  To-Do & Calendar Scheduler")
     print("  Open in your browser:")
