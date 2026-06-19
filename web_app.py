@@ -228,21 +228,27 @@ class H(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.0"
 
     def _html(self, body):
-        data = body.encode()
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.send_header("Content-Length", len(data))
-        self.end_headers()
-        self.wfile.write(data)
+        try:
+            data = body.encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", len(data))
+            self.end_headers()
+            self.wfile.write(data)
+        except (BrokenPipeError, ConnectionResetError):
+            pass
 
     def _form(self):
         n = int(self.headers.get("Content-Length", 0))
         return {k: v[0] for k, v in parse_qs(self.rfile.read(n).decode()).items()}
 
     def _redir(self, url="/"):
-        self.send_response(302)
-        self.send_header("Location", url)
-        self.end_headers()
+        try:
+            self.send_response(302)
+            self.send_header("Location", url)
+            self.end_headers()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
 
     def do_GET(self):
         p = self.path
