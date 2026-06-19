@@ -7,84 +7,90 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,system-ui,sans-serif;background:#1e1e2e;color:#cdd6f4;
-  min-height:100vh;padding:10px}
+  min-height:100vh;padding:10px;-webkit-tap-highlight-color:rgba(0,0,0,0)}
 h1{text-align:center;padding:10px 0;font-size:1.3em}
+button,input,select,textarea{font-family:inherit;font-size:inherit}
 .tabs{display:flex;gap:4px;margin-bottom:10px}
 .tabs button{flex:1;padding:10px;background:#313244;color:#cdd6f4;border:none;
-  border-radius:8px 8px 0 0;font-size:1em;cursor:pointer}
+  border-radius:8px 8px 0 0;font-size:1em;cursor:pointer;-webkit-appearance:none}
 .tabs button.on{background:#45475a;color:#f5c2e7}
 .panel{display:none;background:#181825;border-radius:0 0 8px 8px;padding:12px}
 .panel.on{display:block}
 .task{display:flex;align-items:center;background:#313244;border-radius:6px;
   padding:8px 12px;margin-bottom:6px}
-.task input[type=checkbox]{width:20px;height:20px;margin-right:10px;accent-color:#89b4fa}
-.task span{flex:1;font-size:1em}
-.task .undone{color:#f38ba8}
-.task .done{color:#a6e3a1;text-decoration:line-through}
-.b{background:#89b4fa;color:#1e1e2e;border:none;border-radius:4px;padding:6px 14px;
-  cursor:pointer;font-size:.95em;font-weight:600}
+.task input[type=checkbox]{width:22px;height:22px;margin-right:10px;accent-color:#89b4fa;
+  -webkit-appearance:checkbox}
+.task span{flex:1;font-size:1em;word-break:break-word}
+.undone{color:#f38ba8}
+.done{color:#a6e3a1;text-decoration:line-through}
+.b{display:inline-block;background:#89b4fa;color:#1e1e2e;border:none;border-radius:4px;
+  padding:8px 16px;cursor:pointer;font-size:.95em;font-weight:600;
+  -webkit-appearance:none;touch-action:manipulation}
 .b:active{opacity:.7}
 .bd{background:#f38ba8}
-.bs{padding:4px 10px;font-size:.85em}
+.bs{padding:6px 12px;font-size:.85em}
 .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.row input[type=text]{flex:1;min-width:120px;padding:8px;border-radius:4px;
-  border:1px solid #45475a;background:#313244;color:#cdd6f4;font-size:1em}
+input[type=text],input[type=date]{padding:8px;border-radius:4px;border:1px solid #45475a;
+  background:#313244;color:#cdd6f4;font-size:1em;-webkit-appearance:none}
+.row input[type=text]{flex:1;min-width:120px}
 .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .nav .wl{font-weight:700;text-align:center;flex:1;font-size:.95em}
 .dj{display:flex;gap:6px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
-.dj input[type=date]{padding:6px;border-radius:4px;border:1px solid #45475a;
-  background:#313244;color:#cdd6f4;font-size:1em}
 .wg{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;min-width:640px}
 th{background:#313244;padding:6px 4px;font-size:.85em;position:sticky;top:0;z-index:2}
 td{border:1px solid #45475a;padding:2px 4px;vertical-align:top;height:44px;
   font-size:.8em;min-width:80px;cursor:pointer}
-td:hover{background:#313244}
+td:active{background:#313244}
 .tl{color:#6c7086;font-size:.75em}
-.ev{background:#89b4fa;color:#1e1e2e;border-radius:4px;padding:2px 4px;margin:1px 0;
+.ev{background:#89b4fa;color:#1e1e2e;border-radius:4px;padding:3px 5px;margin:1px 0;
   font-size:.78em;display:flex;justify-content:space-between;align-items:center;gap:4px}
 .ev span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ef{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:end}
-.ef label{font-size:.85em;color:#a6adc8}
-.ef input{padding:6px;border-radius:4px;border:1px solid #45475a;background:#313244;
-  color:#cdd6f4;font-size:.95em}
-.fg{display:flex;flex-direction:column;gap:2px}
+.ef label{font-size:.85em;color:#a6adc8;display:block;margin-bottom:2px}
+.fg{display:flex;flex-direction:column}
 .fg.w{flex:1;min-width:100px}
 .fg.w input{width:100%}
 .hb{background:#313244;border-radius:8px;padding:14px 18px;font-size:.9em;
   line-height:1.6;white-space:pre-line}
 .fl{background:#f38ba8;color:#1e1e2e;padding:8px 14px;border-radius:6px;
   margin-bottom:8px;font-weight:600}
+noscript .fl{display:block}
 </style>
 </head>
 <body>
 
+<noscript>
+<div class="fl">JavaScript ist deaktiviert. Bitte oeffne diese Datei in Safari:
+Lange auf die Datei druecken > Teilen > In Safari oeffnen.</div>
+</noscript>
+
 <h1>To-Do &amp; Calendar Scheduler</h1>
 <div id="flash"></div>
 
-<div class="tabs">
-  <button class="on" onclick="showTab('todo')">To-Do List</button>
-  <button onclick="showTab('cal')">Calendar</button>
-  <button onclick="showTab('help')">Help</button>
+<div class="tabs" id="tab-bar">
+  <button class="on" id="btn-todo">To-Do List</button>
+  <button id="btn-cal">Calendar</button>
+  <button id="btn-help">Help</button>
 </div>
 
 <div id="todo" class="panel on">
   <div id="task-list"></div>
   <div class="row">
-    <input type="text" id="task-input" placeholder="New task..." onkeydown="if(event.key==='Enter')addTask()">
-    <button class="b" onclick="addTask()">Add Task</button>
+    <input type="text" id="task-input" placeholder="New task...">
+    <button class="b" id="btn-add-task">Add Task</button>
   </div>
 </div>
 
 <div id="cal" class="panel">
   <div class="dj">
     <input type="date" id="date-jump">
-    <button class="b bs" onclick="jumpDate()">Jump to date</button>
+    <button class="b bs" id="btn-jump">Jump to date</button>
   </div>
   <div class="nav">
-    <button class="b bs" onclick="prevWeek()">&#9664;</button>
+    <button class="b bs" id="btn-prev">&#9664;</button>
     <span class="wl" id="week-label"></span>
-    <button class="b bs" onclick="nextWeek()">&#9654;</button>
+    <button class="b bs" id="btn-next">&#9654;</button>
   </div>
   <div class="wg">
     <table>
@@ -109,16 +115,16 @@ td:hover{background:#313244}
       <label>End</label>
       <input type="text" id="ev-end" placeholder="10:00">
     </div>
-    <button class="b" onclick="addEvent()">Add Event</button>
+    <button class="b" id="btn-add-ev">Add Event</button>
   </div>
 </div>
 
 <div id="help" class="panel">
 <div class="hb">TO-DO LIST CONTROLS:
 - Check the checkbox to mark a task as done
-- Click the X button to remove a task
-- Red text = Unfinished, Green text = Finished
-- Add new tasks in the input field at the bottom
+- Tap the X button to remove a task
+- Red = Unfinished, Green = Finished
+- Add new tasks at the bottom
 
 CALENDAR CONTROLS:
 - Tap any time slot to pre-fill the event form
@@ -127,250 +133,298 @@ CALENDAR CONTROLS:
 - Delete events with the X button
 
 TIPS:
-- Data saves automatically to your browser
+- Data saves automatically in your browser
 - Times are in 24-hour format (HH:MM)
 - Weekly view shows 08:00 to 20:00</div>
 </div>
 
 <script>
-var TIMES=[];
-for(var h=8;h<=20;h++) TIMES.push((h<10?'0':'')+h+':00');
-var DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-var tasks=[];
-var events={};
-var weekStart=null;
+(function(){
+  "use strict";
 
-function load(){
-  try{
-    var d=JSON.parse(localStorage.getItem('todo_cal_data'));
-    if(d){
-      tasks=d.tasks||[];
-      events={};
-      var ev=d.events||{};
-      for(var k in ev){
-        if(Array.isArray(ev[k])){
-          if(ev[k].length&&typeof ev[k][0]==='string'){
-            events[k]=ev[k].map(function(e){return{event:e,start:'09:00',end:'10:00'}});
-          } else {
-            events[k]=ev[k];
+  var TIMES=[];
+  for(var h=8;h<=20;h++) TIMES.push((h<10?"0":"")+h+":00");
+  var DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+  var tasks=[];
+  var events={};
+  var weekStart;
+
+  // --- Storage ---
+
+  function load(){
+    try{
+      var raw=localStorage.getItem("todo_cal_data");
+      if(raw){
+        var d=JSON.parse(raw);
+        tasks=d.tasks||[];
+        var ev=d.events||{};
+        events={};
+        for(var k in ev){
+          if(!ev.hasOwnProperty(k)) continue;
+          if(Array.isArray(ev[k])){
+            if(ev[k].length>0&&typeof ev[k][0]==="string"){
+              events[k]=ev[k].map(function(e){return{event:e,start:"09:00",end:"10:00"};});
+            }else{
+              events[k]=ev[k];
+            }
           }
         }
       }
+    }catch(e){}
+    var now=new Date();
+    var day=now.getDay();
+    var diff=(day===0)?6:day-1;
+    weekStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()-diff);
+  }
+
+  function save(){
+    try{
+      var d={tasks:tasks.map(function(t){return{task:t.task,done:t.done};}),events:events};
+      localStorage.setItem("todo_cal_data",JSON.stringify(d));
+    }catch(e){}
+  }
+
+  // --- Util ---
+
+  function fmt(d){
+    var y=d.getFullYear();
+    var m=d.getMonth()+1;
+    var dd=d.getDate();
+    return y+"-"+(m<10?"0":"")+m+"-"+(dd<10?"0":"")+dd;
+  }
+
+  function weekDates(){
+    var r=[];
+    for(var i=0;i<7;i++){
+      r.push(fmt(new Date(weekStart.getTime()+i*86400000)));
     }
-  }catch(e){}
-  var now=new Date();
-  var day=now.getDay();
-  var diff=day===0?6:day-1;
-  weekStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()-diff);
-}
-
-function save(){
-  var d={tasks:tasks.map(function(t){return{task:t.task,done:t.done}}),events:events};
-  localStorage.setItem('todo_cal_data',JSON.stringify(d));
-}
-
-function fmt(d){
-  var y=d.getFullYear();
-  var m=d.getMonth()+1;
-  var day=d.getDate();
-  return y+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;
-}
-
-function weekDates(){
-  var r=[];
-  for(var i=0;i<7;i++){
-    var d=new Date(weekStart.getTime()+i*86400000);
-    r.push(fmt(d));
+    return r;
   }
-  return r;
-}
 
-function showTab(name){
-  var panels=document.querySelectorAll('.panel');
-  for(var i=0;i<panels.length;i++) panels[i].className='panel';
-  document.getElementById(name).className='panel on';
-  var btns=document.querySelectorAll('.tabs button');
-  for(var i=0;i<btns.length;i++) btns[i].className='';
-  var map={todo:0,cal:1,help:2};
-  if(map[name]!==undefined) btns[map[name]].className='on';
-  if(name==='cal') renderCal();
-}
-
-function flash(msg){
-  var el=document.getElementById('flash');
-  if(msg){
-    el.innerHTML='<div class="fl">'+msg+'</div>';
-    setTimeout(function(){el.innerHTML=''},3000);
-  } else {
-    el.innerHTML='';
+  function esc(s){
+    var d=document.createElement("div");
+    d.textContent=s;
+    return d.innerHTML;
   }
-}
 
-// --- Tasks ---
-
-function renderTasks(){
-  var el=document.getElementById('task-list');
-  var html='';
-  for(var i=0;i<tasks.length;i++){
-    var t=tasks[i];
-    var cls=t.done?'done':'undone';
-    var chk=t.done?' checked':'';
-    html+='<div class="task">';
-    html+='<input type="checkbox"'+chk+' onchange="toggleTask('+i+')">';
-    html+='<span class="'+cls+'">'+esc(t.task)+'</span>';
-    html+='<button class="b bd bs" onclick="removeTask('+i+')">&times;</button>';
-    html+='</div>';
+  function flash(msg){
+    var el=document.getElementById("flash");
+    el.innerHTML='<div class="fl">'+esc(msg)+"</div>";
+    setTimeout(function(){el.innerHTML="";},3000);
   }
-  el.innerHTML=html;
-}
 
-function addTask(){
-  var inp=document.getElementById('task-input');
-  var txt=inp.value.trim();
-  if(!txt) return;
-  tasks.push({task:txt,done:false});
-  inp.value='';
-  save();
-  renderTasks();
-}
+  // --- Tabs ---
 
-function toggleTask(i){
-  tasks[i].done=!tasks[i].done;
-  save();
-  renderTasks();
-}
-
-function removeTask(i){
-  tasks.splice(i,1);
-  save();
-  renderTasks();
-}
-
-// --- Calendar ---
-
-function renderCal(){
-  var wd=weekDates();
-  var end=new Date(weekStart.getTime()+6*86400000);
-  document.getElementById('week-label').textContent=
-    'Week of '+fmt(weekStart)+' to '+fmt(end);
-  document.getElementById('date-jump').value=fmt(weekStart);
-  document.getElementById('ev-date').value=fmt(weekStart);
-
-  var hdr='<th>Time</th>';
-  for(var i=0;i<7;i++){
-    hdr+='<th>'+DAYS[i]+'<br><small>'+wd[i]+'</small></th>';
+  function showTab(name){
+    var panels=document.querySelectorAll(".panel");
+    for(var i=0;i<panels.length;i++) panels[i].className="panel";
+    document.getElementById(name).className="panel on";
+    var btns=document.querySelectorAll(".tabs button");
+    for(var i=0;i<btns.length;i++) btns[i].className="";
+    var map={todo:0,cal:1,help:2};
+    if(map[name]!==undefined) btns[map[name]].className="on";
+    if(name==="cal") renderCal();
   }
-  document.getElementById('day-headers').innerHTML=hdr;
 
-  var grid={};
-  for(var di=0;di<wd.length;di++){
-    var date=wd[di];
-    if(!events[date]) continue;
-    for(var ei=0;ei<events[date].length;ei++){
-      var ev=events[date][ei];
-      var sh=parseInt(ev.start.split(':')[0],10);
-      var slot=(sh<10?'0':'')+sh+':00';
-      var key=date+'|'+slot;
-      if(!grid[key]) grid[key]=[];
-      grid[key].push({event:ev.event,start:ev.start,end:ev.end,idx:ei,date:date});
+  // --- Tasks ---
+
+  function renderTasks(){
+    var el=document.getElementById("task-list");
+    el.innerHTML="";
+    for(var i=0;i<tasks.length;i++){
+      (function(idx){
+        var t=tasks[idx];
+        var row=document.createElement("div");
+        row.className="task";
+
+        var cb=document.createElement("input");
+        cb.type="checkbox";
+        cb.checked=t.done;
+        cb.addEventListener("change",function(){
+          tasks[idx].done=cb.checked;
+          save();
+          renderTasks();
+        });
+        row.appendChild(cb);
+
+        var sp=document.createElement("span");
+        sp.className=t.done?"done":"undone";
+        sp.textContent=t.task;
+        row.appendChild(sp);
+
+        var del=document.createElement("button");
+        del.className="b bd bs";
+        del.textContent="×";
+        del.addEventListener("click",function(){
+          tasks.splice(idx,1);
+          save();
+          renderTasks();
+        });
+        row.appendChild(del);
+
+        el.appendChild(row);
+      })(i);
     }
   }
 
-  var body='';
-  for(var ti=0;ti<TIMES.length;ti++){
-    var time=TIMES[ti];
-    body+='<tr><td><span class="tl">'+time+'</span></td>';
-    for(var di=0;di<7;di++){
+  function addTask(){
+    var inp=document.getElementById("task-input");
+    var txt=inp.value.trim();
+    if(!txt) return;
+    tasks.push({task:txt,done:false});
+    inp.value="";
+    save();
+    renderTasks();
+  }
+
+  // --- Calendar ---
+
+  function renderCal(){
+    var wd=weekDates();
+    var endDate=new Date(weekStart.getTime()+6*86400000);
+    document.getElementById("week-label").textContent=
+      "Week of "+fmt(weekStart)+" to "+fmt(endDate);
+    document.getElementById("date-jump").value=fmt(weekStart);
+    document.getElementById("ev-date").value=fmt(weekStart);
+
+    var hdr="<th>Time</th>";
+    for(var i=0;i<7;i++){
+      hdr+="<th>"+DAYS[i]+"<br><small>"+wd[i]+"</small></th>";
+    }
+    document.getElementById("day-headers").innerHTML=hdr;
+
+    var grid={};
+    for(var di=0;di<wd.length;di++){
       var date=wd[di];
-      var key=date+'|'+time;
-      var hour=parseInt(time,10);
-      var nh=hour<20?hour+1:20;
-      var et=(nh<10?'0':'')+nh+':00';
-      body+='<td onclick="prefill(\''+date+'\',\''+time+'\',\''+et+'\')">';
-      if(grid[key]){
-        for(var gi=0;gi<grid[key].length;gi++){
-          var g=grid[key][gi];
-          body+='<div class="ev">';
-          body+='<span title="'+esc(g.event)+' ('+g.start+'-'+g.end+')">'+esc(g.event)+' '+g.start+'-'+g.end+'</span>';
-          body+='<button class="b bd bs" onclick="event.stopPropagation();deleteEvent(\''+g.date+'\','+g.idx+')">&times;</button>';
-          body+='</div>';
-        }
+      if(!events[date]) continue;
+      for(var ei=0;ei<events[date].length;ei++){
+        var ev=events[date][ei];
+        var sh=parseInt(ev.start.split(":")[0],10);
+        var slot=(sh<10?"0":"")+sh+":00";
+        var key=date+"|"+slot;
+        if(!grid[key]) grid[key]=[];
+        grid[key].push({event:ev.event,start:ev.start,end:ev.end,idx:ei,date:date});
       }
-      body+='</td>';
     }
-    body+='</tr>';
+
+    var tbody=document.getElementById("cal-body");
+    tbody.innerHTML="";
+
+    for(var ti=0;ti<TIMES.length;ti++){
+      var time=TIMES[ti];
+      var tr=document.createElement("tr");
+
+      var tdTime=document.createElement("td");
+      tdTime.innerHTML='<span class="tl">'+time+"</span>";
+      tr.appendChild(tdTime);
+
+      for(var di=0;di<7;di++){
+        (function(date,time){
+          var td=document.createElement("td");
+          var key=date+"|"+time;
+          if(grid[key]){
+            for(var gi=0;gi<grid[key].length;gi++){
+              (function(g){
+                var evDiv=document.createElement("div");
+                evDiv.className="ev";
+                var sp=document.createElement("span");
+                sp.textContent=g.event+" "+g.start+"-"+g.end;
+                sp.title=g.event+" ("+g.start+"-"+g.end+")";
+                evDiv.appendChild(sp);
+                var dbtn=document.createElement("button");
+                dbtn.className="b bd bs";
+                dbtn.textContent="×";
+                dbtn.addEventListener("click",function(e){
+                  e.stopPropagation();
+                  if(events[g.date]&&g.idx<events[g.date].length){
+                    events[g.date].splice(g.idx,1);
+                    if(events[g.date].length===0) delete events[g.date];
+                    save();
+                    renderCal();
+                  }
+                });
+                evDiv.appendChild(dbtn);
+                td.appendChild(evDiv);
+              })(grid[key][gi]);
+            }
+          }
+          td.addEventListener("click",function(){
+            var hour=parseInt(time,10);
+            var nh=hour<20?hour+1:20;
+            var et=(nh<10?"0":"")+nh+":00";
+            document.getElementById("ev-date").value=date;
+            document.getElementById("ev-start").value=time;
+            document.getElementById("ev-end").value=et;
+            document.getElementById("ev-name").focus();
+            document.getElementById("ef").scrollIntoView({behavior:"smooth"});
+          });
+          tr.appendChild(td);
+        })(wd[di],time);
+      }
+      tbody.appendChild(tr);
+    }
   }
-  document.getElementById('cal-body').innerHTML=body;
-}
 
-function prefill(date,start,end){
-  document.getElementById('ev-date').value=date;
-  document.getElementById('ev-start').value=start;
-  document.getElementById('ev-end').value=end;
-  document.getElementById('ev-name').focus();
-  document.getElementById('ef').scrollIntoView({behavior:'smooth'});
-}
-
-function addEvent(){
-  var name=document.getElementById('ev-name').value.trim();
-  var date=document.getElementById('ev-date').value;
-  var start=document.getElementById('ev-start').value.trim();
-  var end=document.getElementById('ev-end').value.trim();
-  if(!name||!date||!start||!end){flash('Please fill all fields');return;}
-  if(!/^\d{2}:\d{2}$/.test(start)||!/^\d{2}:\d{2}$/.test(end)){
-    flash('Invalid time format. Use HH:MM');return;
-  }
-  if(!events[date]) events[date]=[];
-  events[date].push({event:name,start:start,end:end});
-  document.getElementById('ev-name').value='';
-  document.getElementById('ev-start').value='';
-  document.getElementById('ev-end').value='';
-  var sel=new Date(date+'T00:00:00');
-  var day=sel.getDay();
-  var diff=day===0?6:day-1;
-  weekStart=new Date(sel.getFullYear(),sel.getMonth(),sel.getDate()-diff);
-  save();
-  renderCal();
-}
-
-function deleteEvent(date,idx){
-  if(events[date]&&idx<events[date].length){
-    events[date].splice(idx,1);
-    if(events[date].length===0) delete events[date];
+  function addEvent(){
+    var name=document.getElementById("ev-name").value.trim();
+    var date=document.getElementById("ev-date").value;
+    var start=document.getElementById("ev-start").value.trim();
+    var end=document.getElementById("ev-end").value.trim();
+    if(!name||!date||!start||!end){flash("Bitte alle Felder ausfuellen");return;}
+    if(!/^\d{2}:\d{2}$/.test(start)||!/^\d{2}:\d{2}$/.test(end)){
+      flash("Zeitformat ungueltig. Benutze HH:MM");return;
+    }
+    if(!events[date]) events[date]=[];
+    events[date].push({event:name,start:start,end:end});
+    document.getElementById("ev-name").value="";
+    document.getElementById("ev-start").value="";
+    document.getElementById("ev-end").value="";
+    var sel=new Date(date+"T00:00:00");
+    var day=sel.getDay();
+    var diff=(day===0)?6:day-1;
+    weekStart=new Date(sel.getFullYear(),sel.getMonth(),sel.getDate()-diff);
     save();
     renderCal();
   }
-}
 
-function prevWeek(){
-  weekStart=new Date(weekStart.getTime()-7*86400000);
-  renderCal();
-}
+  function prevWeek(){
+    weekStart=new Date(weekStart.getTime()-7*86400000);
+    renderCal();
+  }
+  function nextWeek(){
+    weekStart=new Date(weekStart.getTime()+7*86400000);
+    renderCal();
+  }
+  function jumpDate(){
+    var v=document.getElementById("date-jump").value;
+    if(!v) return;
+    var d=new Date(v+"T00:00:00");
+    var day=d.getDay();
+    var diff=(day===0)?6:day-1;
+    weekStart=new Date(d.getFullYear(),d.getMonth(),d.getDate()-diff);
+    renderCal();
+  }
 
-function nextWeek(){
-  weekStart=new Date(weekStart.getTime()+7*86400000);
-  renderCal();
-}
+  // --- Wire up buttons ---
 
-function jumpDate(){
-  var v=document.getElementById('date-jump').value;
-  if(!v) return;
-  var d=new Date(v+'T00:00:00');
-  var day=d.getDay();
-  var diff=day===0?6:day-1;
-  weekStart=new Date(d.getFullYear(),d.getMonth(),d.getDate()-diff);
-  renderCal();
-}
+  document.getElementById("btn-todo").addEventListener("click",function(){showTab("todo");});
+  document.getElementById("btn-cal").addEventListener("click",function(){showTab("cal");});
+  document.getElementById("btn-help").addEventListener("click",function(){showTab("help");});
+  document.getElementById("btn-add-task").addEventListener("click",addTask);
+  document.getElementById("task-input").addEventListener("keydown",function(e){
+    if(e.key==="Enter") addTask();
+  });
+  document.getElementById("btn-jump").addEventListener("click",jumpDate);
+  document.getElementById("btn-prev").addEventListener("click",prevWeek);
+  document.getElementById("btn-next").addEventListener("click",nextWeek);
+  document.getElementById("btn-add-ev").addEventListener("click",addEvent);
 
-function esc(s){
-  var d=document.createElement('div');
-  d.textContent=s;
-  return d.innerHTML;
-}
+  // --- Init ---
+  load();
+  renderTasks();
 
-// --- Init ---
-load();
-renderTasks();
+})();
 </script>
 </body>
 </html>
