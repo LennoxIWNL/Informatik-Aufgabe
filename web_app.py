@@ -125,14 +125,15 @@ def page(tab="todo", flash=""):
 <title>To-Do &amp; Calendar</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:-apple-system,system-ui,sans-serif;background:#1e1e2e;color:#cdd6f4;padding:10px}}
-h1{{text-align:center;padding:10px 0;font-size:1.3em}}
+body{{font-family:-apple-system,system-ui,sans-serif;background:#1e1e2e;color:#cdd6f4;padding:0}}
+h1{{text-align:center;padding:10px 0;font-size:1.3em;margin:0 10px}}
 button,input{{font-family:inherit;font-size:inherit;-webkit-appearance:none}}
-.tabs{{display:flex;gap:4px;margin-bottom:10px}}
+.top{{position:sticky;top:0;z-index:10;background:#1e1e2e;padding:0 10px 0}}
+.tabs{{display:flex;gap:4px;padding-bottom:10px}}
 .tabs a{{flex:1;padding:10px;background:#313244;color:#cdd6f4;border:none;
   border-radius:8px 8px 0 0;font-size:1em;text-align:center;text-decoration:none;display:block}}
 .tabs a.on{{background:#45475a;color:#f5c2e7}}
-.panel{{display:none;background:#181825;border-radius:0 0 8px 8px;padding:12px}}
+.panel{{display:none;background:#181825;border-radius:0 0 8px 8px;padding:12px;margin:0 10px}}
 .panel.on{{display:block}}
 .task{{display:flex;align-items:center;background:#313244;border-radius:6px;padding:8px 12px;margin-bottom:6px}}
 .task form{{display:inline}}
@@ -154,28 +155,30 @@ input[type=text],input[type=date]{{padding:8px;border-radius:4px;border:1px soli
 .wg{{overflow-x:auto;-webkit-overflow-scrolling:touch}}
 table{{width:100%;border-collapse:collapse;min-width:640px}}
 th{{background:#313244;padding:6px 4px;font-size:.85em;position:sticky;top:0;z-index:2}}
-td{{border:1px solid #45475a;padding:2px 4px;vertical-align:top;height:44px;font-size:.8em;min-width:80px;position:relative}}
+td{{border:1px solid #45475a;padding:2px 4px;vertical-align:top;height:44px;font-size:.8em;min-width:80px}}
 td:hover{{background:#313244}}
 .tl{{color:#6c7086;font-size:.75em}}
 .ev{{background:#89b4fa;color:#1e1e2e;border-radius:4px;padding:3px 5px;margin:1px 0;
-  font-size:.78em;display:flex;justify-content:space-between;align-items:center;gap:4px;position:relative;z-index:1}}
+  font-size:.78em;display:flex;justify-content:space-between;align-items:center;gap:4px}}
 .ev span{{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 .ev form{{flex-shrink:0}}
-.sa{{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;
-  justify-content:center;color:#45475a;text-decoration:none;font-size:1.2em}}
-td:hover .sa{{color:#6c7086}}
+.sa{{display:inline-block;color:#45475a;text-decoration:none;font-size:.9em;padding:2px 6px;
+  border-radius:4px;background:#313244;margin-top:2px}}
+.sa:active{{background:#45475a}}
 .ef{{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:end}}
 .ef label{{font-size:.85em;color:#a6adc8;display:block;margin-bottom:2px}}
 .fg{{display:flex;flex-direction:column}}.fg.w{{flex:1;min-width:100px}}.fg.w input{{width:100%}}
 .hb{{background:#313244;border-radius:8px;padding:14px 18px;font-size:.9em;line-height:1.6;white-space:pre-line}}
 .fl{{background:#f38ba8;color:#1e1e2e;padding:8px 14px;border-radius:6px;margin-bottom:8px;font-weight:600}}
 </style></head><body>
+<div class="top" id="top">
 <h1>To-Do &amp; Calendar</h1>
 {flash_html}
 <div class="tabs">
-<a href="/?tab=todo" class="{('on' if tab=='todo' else '')}">To-Do List</a>
-<a href="/?tab=cal" class="{('on' if tab=='cal' else '')}">Calendar</a>
-<a href="/?tab=help">Help</a>
+<a href="/?tab=todo#top" class="{('on' if tab=='todo' else '')}">To-Do List</a>
+<a href="/?tab=cal#top" class="{('on' if tab=='cal' else '')}">Calendar</a>
+<a href="/?tab=help#top">Help</a>
+</div>
 </div>
 <div id="todo" class="panel{todo_on}">
 {tasks_html}
@@ -187,9 +190,9 @@ td:hover .sa{{color:#6c7086}}
 <input type="date" name="date" value="{sel}">
 <button type="submit" class="b bs">Jump to date</button></form>
 <div class="nav">
-<a href="/pw?tab=cal" class="b bs">&#9664;</a>
+<a href="/pw?tab=cal#top" class="b bs">&#9664;</a>
 <span class="wl">{esc(wl)}</span>
-<a href="/nw?tab=cal" class="b bs">&#9654;</a></div>
+<a href="/nw?tab=cal#top" class="b bs">&#9654;</a></div>
 <div class="wg"><table><thead><tr>{day_hdr}</tr></thead><tbody>{cal_rows}</tbody></table></div>
 <form method="post" action="/ae" class="ef" id="ef">
 <div class="fg w"><label>Event</label><input type="text" name="event" id="ev-name" placeholder="Event name..." required></div>
@@ -284,7 +287,7 @@ class H(BaseHTTPRequestHandler):
             if txt:
                 state["tasks"].append({"task": txt, "done": False})
                 save_data()
-            self._redir("/?tab=todo")
+            self._redir("/?tab=todo#top")
 
         elif p.startswith("/toggle/"):
             try:
@@ -294,7 +297,7 @@ class H(BaseHTTPRequestHandler):
                     save_data()
             except ValueError:
                 pass
-            self._redir("/?tab=todo")
+            self._redir("/?tab=todo#top")
 
         elif p.startswith("/del/"):
             try:
@@ -304,7 +307,7 @@ class H(BaseHTTPRequestHandler):
                     save_data()
             except ValueError:
                 pass
-            self._redir("/?tab=todo")
+            self._redir("/?tab=todo#top")
 
         elif p == "/jump":
             ds = form.get("date", "")
@@ -314,7 +317,7 @@ class H(BaseHTTPRequestHandler):
                     state["week"] = (sel - timedelta(days=sel.weekday())).strftime("%Y-%m-%d")
                 except ValueError:
                     pass
-            self._redir("/?tab=cal")
+            self._redir("/?tab=cal#top")
 
         elif p == "/ae":
             ev = form.get("event", "").strip()
@@ -331,7 +334,7 @@ class H(BaseHTTPRequestHandler):
                     save_data()
                 except ValueError:
                     pass
-            self._redir("/?tab=cal")
+            self._redir("/?tab=cal#top")
 
         elif p.startswith("/de/"):
             parts = p.split("/")
@@ -345,10 +348,10 @@ class H(BaseHTTPRequestHandler):
                         save_data()
                 except ValueError:
                     pass
-            self._redir("/?tab=cal")
+            self._redir("/?tab=cal#top")
 
         else:
-            self._redir("/")
+            self._redir("/#top")
 
     def log_message(self, fmt, *args):
         return
